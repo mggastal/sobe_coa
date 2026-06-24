@@ -280,16 +280,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
         <div class="cc-s">Vendas (barras laranja) · Invest. Meta (linha verde) · CPV (linha preta)</div>
         <div class="cw" style="height:230px"><canvas id="chOvMain"></canvas></div>
       </div>
-      <!-- Origem (30%) + Produto (70%) -->
-      <div class="ov-bottom" style="display:grid;grid-template-columns:3fr 7fr;gap:12px;margin-bottom:14px;">
-        <div class="cc">
-          <div class="cc-t">Vendas por Origem · Last Click</div>
-          <div class="cc-s">Tráfego Pago vs Orgânico · último clique antes da compra</div>
-          <div class="cw" style="height:180px"><canvas id="chOvOrigem"></canvas></div>
-        </div>
+      <!-- Produto -->
+      <div class="ov-bottom" style="margin-bottom:14px;">
         <div class="cc">
           <div class="cc-t">Vendas por Produto</div>
-          <div class="cc-s" id="ccProdutoSub">por origem</div>
+          <div class="cc-s" id="ccProdutoSub">por produto</div>
           <div id="tPorProduto"></div>
         </div>
       </div>
@@ -709,18 +704,7 @@ function renderOverview(){
     // Pago vs Orgânico
     const pagoCnt=rawF.filter(r=>r.t&&r.t.includes('Pago')).length;
     const orgCnt =rawF.filter(r=>r.t&&r.t.includes('rgân')).length;
-    dc('chOvOrigem');
-    CH['chOvOrigem']=new Chart(document.getElementById('chOvOrigem'),{
-      type:'doughnut',
-      data:{labels:['Tráfego Pago','Orgânico'],datasets:[{data:[pagoCnt,orgCnt],backgroundColor:['#f97316','#ea580c'],borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{
-        legend:{position:'bottom',labels:{color:TXT(),font:bf,padding:10,boxWidth:10}},
-        datalabels:{display:true,color:'#fff',font:{size:11,weight:'bold'},
-          formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);
-            return t>0?fN(v)+'\n'+(v/t*100).toFixed(0)+'%':null;}}
-      }}
-    });
-
+  
     // Por produto — somar do raw filtrado
     const prodMap={};
     rawF.forEach(r=>{
