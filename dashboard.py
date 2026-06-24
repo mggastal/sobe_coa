@@ -148,11 +148,13 @@ def load_meta():
     print("  Lendo meta-ads...")
     df=pd.read_csv(URL_META)
     df=df.rename(columns={"Date":"date","Campaign Name":"campaign","Adset Name":"adset",
-        "Ad Name":"ad","Thumbnail URL":"thumb","Spend (Cost, Amount Spent)":"spend",
+        "Ad Name":"ad","Thumbnail URL":"thumb","Status":"status","Spend (Cost, Amount Spent)":"spend",
         "Impressions":"impressions","Action Link Clicks":"link_clicks",
         "Action Landing Page View":"page_view","Action Omni Initiated Checkout":"init_checkout",
         "Action Omni Purchase":"purchase","Action Value Omni Purchase":"revenue_meta"})
     df["date"]=pd.to_datetime(df["date"],errors="coerce")
+    if "status" not in df.columns: df["status"]=""
+    df["status"]=df["status"].astype(str).str.strip().str.upper()
     for c in ["spend","impressions","link_clicks","page_view","init_checkout","purchase","revenue_meta"]:
         if c in df.columns: df[c]=to_num(df[c])
     df["is_lct"]=df["campaign"].str.contains(LANCAMENTO_COD,na=False,case=False) if LANCAMENTO_COD else True
